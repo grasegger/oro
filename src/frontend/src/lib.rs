@@ -9,6 +9,7 @@ extern crate yew;
 use wasm_bindgen::prelude::*;
 use yew::{html, Callback, Component, ComponentLink, Html, ShouldRender};
 
+use web_sys::console;
 
 // Called by our JS entry point
 #[wasm_bindgen]
@@ -36,7 +37,9 @@ impl Component for Model {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::Click => {}
+            Msg::Click => {
+				console::log_1(&"clock".into())
+			}
         }
         true
     }

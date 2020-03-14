@@ -1,17 +1,18 @@
-use yew::{html, Component, ComponentLink, Html, ShouldRender, MouseEvent};
+use yew::{html, Component, ComponentLink, Html, ShouldRender};
 use web_sys::console;
 use components::nes_container::NesContainer;
 use components::nes_form::NesForm;
 use components::nes_field::NesField;
 use components::nes_input::{NesInput, InputType};
-use components::nes_button::{NesButton, ButtonType, ButtonState};
+use components::nes_button::{NesButton, ButtonState};
 
 pub struct Index {
     link: ComponentLink<Self>,
 }
 
 pub enum Msg {
-    Click(MouseEvent),
+	Login,
+	Delete,
 }
 
 
@@ -25,9 +26,11 @@ impl Component for Index {
 
     fn update(&mut self, msg: Self::Message,) -> ShouldRender {
 	    match msg {
-		    Msg::Click (MouseEvent) => {
-			    MouseEvent.prevent_default();
-			    console::log_1(&"clock".into());
+		    Msg::Login => {
+			    console::log_1(&"login".into());
+		    },
+		    Msg::Delete => {
+			    console::log_1(&"delete".into());
 		    }
 	    }
 	    true
@@ -46,11 +49,11 @@ impl Component for Index {
 				</NesField>
 				
 				<NesField>
-					<NesButton description="Start Adventure" bstate=ButtonState::Primary />
+					<NesButton description="Start Adventure" bstate=ButtonState::Primary onsignal=self.link.callback(|_| Msg::Login) />
 				</NesField>
 
 				<NesField>
-					<NesButton description="Delete Save File" bstate=ButtonState::Warning />
+					<NesButton description="Delete Save File" bstate=ButtonState::Warning onsignal=self.link.callback(|_| Msg::Delete) />
 				</NesField>
 			</NesForm>
 		</NesContainer>

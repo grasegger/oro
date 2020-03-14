@@ -34,7 +34,7 @@ impl Component for NesInput {
         NesInput { link, props }
     }
 
-    fn update(&mut self, msg: Self::Message,) -> ShouldRender {
+    fn update(&mut self, _msg: Self::Message,) -> ShouldRender {
 	    true
     }
 

@@ -20,7 +20,7 @@ impl Component for NesForm {
         NesForm { link, props }
     }
 
-    fn update(&mut self, msg: Self::Message,) -> ShouldRender {
+    fn update(&mut self, _msg: Self::Message,) -> ShouldRender {
 	    true
     }
 

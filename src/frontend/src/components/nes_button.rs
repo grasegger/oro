@@ -1,8 +1,12 @@
-use yew::{html,  Properties, Component, ComponentLink, Html, ShouldRender};
+use yew::{html, Callback, Properties, Component, ComponentLink, Html, ShouldRender, MouseEvent};
 
 pub struct NesButton {
     link: ComponentLink<Self>,
     props: Props,
+}
+
+pub enum Msg {
+    Clicked(MouseEvent),
 }
 
 #[derive(Clone)]
@@ -39,6 +43,7 @@ pub struct Props {
 	#[prop_or_default]
 	pub bstate: ButtonState,
 	pub description: String,
+	pub onsignal: Callback<()>,
 }
 
 impl NesButton {
@@ -65,19 +70,25 @@ impl NesButton {
 
 impl Component for NesButton {
     type Properties = Props;
-    type Message = ();
+    type Message = Msg;
 
     fn create(props: Self::Properties, link: ComponentLink<Self>) -> Self {
-        NesButton { link, props }
+        NesButton { link, props, }
     }
 
     fn update(&mut self, msg: Self::Message,) -> ShouldRender {
-	    true
+	 match msg {
+            Msg::Clicked (MouseEvent) => {
+		    MouseEvent.prevent_default();
+		    self.props.onsignal.emit(());
+            }
+        }
+	false
     }
 
     fn view(&self) -> Html {
         html! {
-		<button type={self.getType()} class=("nes-btn", self.getState())>{&self.props.description}</button>
+		<button type={self.getType()} onclick=self.link.callback(|e| Msg::Clicked(e)) class=("nes-btn", self.getState())>{&self.props.description}</button>
         }
     }
 }

@@ -1,5 +1,10 @@
 use yew::{html, Component, ComponentLink, Html, ShouldRender, MouseEvent};
 use web_sys::console;
+use components::nes_container::NesContainer;
+use components::nes_form::NesForm;
+use components::nes_field::NesField;
+use components::nes_input::{NesInput, InputType};
+use components::nes_button::{NesButton, ButtonType, ButtonState};
 
 pub struct Index {
     link: ComponentLink<Self>,
@@ -30,24 +35,25 @@ impl Component for Index {
 
     fn view(&self) -> Html {
         html! {
-            <div class="nes-container with-title">
-		  <h3 class="title">{"Quest 1: Tell Me About Yourself"}</h3>
-			<form>
-			  <div class="nes-field">
-			    <label for="instance">{"Mite Instance"}</label>
-			    <input class="nes-input" name="instance"/>
-			  </div>
-		
-			  <div class="nes-field">
-			    <label for="apikey">{"Mite API Key"}</label>
-			    <input class="nes-input" type="password" name="apikey"/>
-			  </div>
-			  
-			  <div class="nes-field">
-			    <input type="submit" class="nes-btn is-primary" value={"Complete Quest"} onclick=self.link.callback(|e| Msg::Click(e))/>
-			  </div>
-			</form>
-            </div>
-        }
+		<NesContainer title="Create Your Character">
+			<NesForm>
+				<NesField>
+				<NesInput identifier="instance" label="What mite realm do you serve for?" itype=InputType::Text />
+				</NesField>
+
+				<NesField>
+				<NesInput identifier="apikey" label="How may you be identified?" itype=InputType::Password />
+				</NesField>
+				
+				<NesField>
+					<NesButton description="Start Adventure" bstate=ButtonState::Primary />
+				</NesField>
+
+				<NesField>
+					<NesButton description="Delete Save File" bstate=ButtonState::Warning />
+				</NesField>
+			</NesForm>
+		</NesContainer>
+	}
     }
 }

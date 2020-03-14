@@ -10,7 +10,8 @@ use wasm_bindgen::JsCast;
 
 pub struct Index {
     link: ComponentLink<Self>,
-    node_ref: NodeRef,
+    instance_ref: NodeRef,
+    apikey_ref: NodeRef,
 }
 
 pub enum Msg {
@@ -24,10 +25,7 @@ impl Index {
 	    let window = web_sys::window().expect("no global `window` exists");
 	    let document = window.document().expect("should have a document on window");
 		
-		// todo: use a node ref instead
-		let name_input = document.get_elements_by_name("instance").get(0).expect("How did you break this???");
-		let instance = name_input.dyn_into::<HtmlInputElement>().unwrap().value();
-		
+		let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap().value();
 		console::log_1(&format!("{:?}", instance).into());
 	}
 }
@@ -37,13 +35,12 @@ impl Component for Index {
     type Properties = ();
 
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Index { link: link, node_ref: NodeRef::default()}
+        Index { link: link, instance_ref: NodeRef::default(), apikey_ref: NodeRef::default()}
     }
 
     fn update(&mut self, msg: Self::Message,) -> ShouldRender {
 	    match msg {
 		    Msg::Login => {
-			    console::log_1(&"login".into());
 				self.store_credentials();
 		    },
 		    Msg::Delete => {
@@ -58,11 +55,11 @@ impl Component for Index {
 		<NesContainer title="Create Your Character">
 			<NesForm>
 				<NesField>
-				<NesInput identifier="instance" label="What mite realm do you serve for?" itype=InputType::Text />
+				<NesInput ref={self.instance_ref.clone()} identifier="instance" label="What mite realm do you serve for?" itype=InputType::Text />
 				</NesField>
 
 				<NesField>
-				<NesInput identifier="apikey" label="How may you be identified?" itype=InputType::Password />
+				<NesInput ref={self.apikey_ref.clone()} identifier="apikey" label="How may you be identified?" itype=InputType::Password />
 				</NesField>
 				
 				<NesField>

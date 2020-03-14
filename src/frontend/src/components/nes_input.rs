@@ -1,4 +1,4 @@
-use yew::{html,  Properties, Component, ComponentLink, Html, ShouldRender};
+use yew::{html, Properties, Component, ComponentLink, Html, ShouldRender};
 
 pub struct NesInput {
     link: ComponentLink<Self>,

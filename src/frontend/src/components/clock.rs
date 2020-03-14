@@ -1,4 +1,4 @@
-use yew::{html, Callback, Component, ComponentLink, Html, ShouldRender};
+use yew::{html, Component, ComponentLink, Html, ShouldRender};
 use web_sys::console;
 
 pub struct Model {

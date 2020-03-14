@@ -36,7 +36,9 @@ features = [
   'HtmlElement',
   'Node',
   'Window',
-  'console'
+  'console',
+  'NodeList',
+  'HtmlInputElement'
 ]
 
 [features]

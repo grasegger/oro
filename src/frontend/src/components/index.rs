@@ -5,8 +5,6 @@ use components::nes_form::NesForm;
 use components::nes_field::NesField;
 use components::nes_input::{NesInput, InputType};
 use components::nes_button::{NesButton, ButtonState};
-use wasm_bindgen::JsCast;
-
 
 pub struct Index {
     link: ComponentLink<Self>,
@@ -21,13 +19,44 @@ pub enum Msg {
 
 
 impl Index {
-	fn store_credentials(&self) {
+	fn check_credentials(&self) -> bool {
 	    let window = web_sys::window().expect("no global `window` exists");
 	    let document = window.document().expect("should have a document on window");
 		
-		let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap().value();
-		console::log_1(&format!("{:?}", instance).into());
+		let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap();
+
+        if instance.value().len() < 1 {
+            let cls = instance.class_name();
+            instance.set_class_name(&format!("{} is-error", cls));
+        } else {
+            let cls = instance.class_name();
+            instance.set_class_name(&cls.replace(" is-error", ""));
+        }
+
+		let apikey = self.apikey_ref.cast::<HtmlInputElement>().unwrap();
+
+        if apikey.value().len() < 1 {
+            let cls = apikey.class_name();
+            apikey.set_class_name(&format!("{} is-error", cls));
+        } else {
+            let cls = apikey.class_name();
+            apikey.set_class_name(&cls.replace(" is-error", ""));
+        }
+
+        // TODO check with the mite api
+
+        instance.value().len() > 0 && apikey.value().len() > 0
 	}
+
+    fn store_credentials(&self) {
+        let window = web_sys::window().expect("no global `window` exists");
+        let storage = window.session_storage().expect("session storage not enabled.").unwrap();
+
+		let apikey = self.apikey_ref.cast::<HtmlInputElement>().unwrap().value();
+		let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap().value();
+        storage.set_item(&"apikey", &apikey);
+        storage.set_item(&"instance", &instance);
+    }
 }
 
 impl Component for Index {
@@ -41,7 +70,10 @@ impl Component for Index {
     fn update(&mut self, msg: Self::Message,) -> ShouldRender {
 	    match msg {
 		    Msg::Login => {
-				self.store_credentials();
+				if self.check_credentials() {
+                    self.store_credentials();
+                    // TODO routing
+                }
 		    },
 		    Msg::Delete => {
 			    console::log_1(&"delete".into());

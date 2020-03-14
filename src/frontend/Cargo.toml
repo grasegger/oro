@@ -22,14 +22,14 @@ console_error_panic_hook = { version = "0.1.5", optional = true }
 # (tested with rust v1.31.1).
 wee_alloc = { version = "0.4.2", optional = true }
 
-yew = { version = "0.13.2", features = ["web_sys"] }
-strum = "0.13"
-strum_macros = "0.13"
+yew = { version = "0.14", features = ["web_sys"] }
+strum = "0.18"
+strum_macros = "0.18"
 serde = "1"
 serde_derive = "1"
 
 [dependencies.web-sys]
-version = "0.3.4"
+version = "0.3"
 features = [
   'Document',
   'Element',

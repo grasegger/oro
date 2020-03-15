@@ -10,9 +10,9 @@ Uhm ... 42?
 
 ## How to run & build
 
-Make sure to install [parcel](https://parceljs.org) and `https://rustup.rs`. All other dependencies will be automatically installed.
+Make sure to install [parcel](https://parceljs.org), [rustup](https://rustup.rs) and [wasm-pack](https://rustwasm.github.io/wasm-pack/installer/). All other dependencies will be automatically installed.
 
-The package.json provides a `run` and `build` command.
+The package.json provides a `run` and `build` command. The first build might take some time, but afterwards its build incremental, so you'll have a blazing fast experience. :)
 
 ## Answers
 

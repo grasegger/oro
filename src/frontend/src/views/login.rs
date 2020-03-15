@@ -1,7 +1,7 @@
 use crate::components::nes_button::{ButtonState, NesButton};
+use wasm_bindgen::JsValue;
 use crate::components::nes_container::NesContainer;
 use yew::services::fetch::Response;
-use yew::services::fetch::Request;
 use yew::format::Json;
 use yew::services::fetch::FetchService;
 use crate::components::nes_field::NesField;
@@ -53,6 +53,7 @@ impl Login {
             
             let link_clone = self.link.clone();
 
+                         //Err(error) => link_clone.send_message(Msg::FetchResourceFailed),
             FetchService::new()
                 .fetch(
                     request,
@@ -61,7 +62,7 @@ impl Login {
                      .0
                      {
                          Ok(data) => link_clone.send_message(Msg::LoginValidated(data)),
-                         Err(error) => link_clone.send_message(Msg::FetchResourceFailed),
+                         Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
                      })
                     .into(),
                     )

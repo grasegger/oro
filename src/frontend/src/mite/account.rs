@@ -11,11 +11,9 @@ pub struct MiteAccount {
 
 impl MiteAccount {
     pub fn getAccount(instance: String, apikey: String) -> Request<Nothing> {
-           let url = format!("https://{}.mite.yo.lk/account.json", instance);
+           let url = format!("https://{}.mite.yo.lk/account.json?api_key={}", instance, apikey);
 
           Request::get(url)
-               .header("X-MiteApiKey", apikey)
-               .header("User-Agent", "oro/0.0.0 (https://github.com/grasegger/oro) custom")
                .body(Nothing)
                .expect("Failed to build request.")
     }

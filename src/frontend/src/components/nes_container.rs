@@ -1,6 +1,7 @@
 use yew::{html, Children, Component, ComponentLink, Html, Properties, Renderable, ShouldRender};
 
 pub struct NesContainer {
+    #[allow(dead_code)]
     link: ComponentLink<Self>,
     props: Props,
 }

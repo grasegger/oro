@@ -1,6 +1,7 @@
 use yew::{html, Callback, Component, ComponentLink, Html, MouseEvent, Properties, ShouldRender};
 
 pub struct NesButton {
+    #[allow(dead_code)]
     link: ComponentLink<Self>,
     props: Props,
 }
@@ -10,6 +11,7 @@ pub enum Msg {
 }
 
 #[derive(Clone)]
+#[allow(dead_code)]
 pub enum ButtonType {
     Submit,
     Reset,
@@ -18,6 +20,7 @@ pub enum ButtonType {
 }
 
 #[derive(Clone)]
+#[allow(dead_code)]
 pub enum ButtonState {
     Empty,
     Primary,
@@ -50,7 +53,7 @@ pub struct Props {
 }
 
 impl NesButton {
-    fn getType(&self) -> &str {
+    fn get_type(&self) -> &str {
         match self.props.btype {
             ButtonType::Empty => "",
             ButtonType::Submit => "submit",
@@ -59,7 +62,7 @@ impl NesButton {
         }
     }
 
-    fn getState(&self) -> &str {
+    fn get_state(&self) -> &str {
         match self.props.bstate {
             ButtonState::Empty => "",
             ButtonState::Primary => "is-primary",
@@ -79,6 +82,7 @@ impl Component for NesButton {
         NesButton { link, props }
     }
 
+    #[allow(non_snake_case)]
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::Clicked(MouseEvent) => {
@@ -91,7 +95,7 @@ impl Component for NesButton {
 
     fn view(&self) -> Html {
         html! {
-        <button type={self.getType()} onclick=self.link.callback(|e| Msg::Clicked(e)) class=("nes-btn", self.getState())>{&self.props.description}</button>
+        <button type={self.get_type()} onclick=self.link.callback(|e| Msg::Clicked(e)) class=("nes-btn", self.get_state())>{&self.props.description}</button>
         }
     }
 }

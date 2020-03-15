@@ -1,6 +1,7 @@
 use yew::{html, Component, ComponentLink, Html, Properties, ShouldRender};
 
 pub struct NesInput {
+    #[allow(dead_code)]
     link: ComponentLink<Self>,
     props: Props,
 }

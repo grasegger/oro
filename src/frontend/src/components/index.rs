@@ -19,9 +19,6 @@ pub enum Msg {
 
 impl Index {
     fn check_credentials(&self) -> bool {
-        let window = web_sys::window().expect("no global `window` exists");
-        let document = window.document().expect("should have a document on window");
-
         let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap();
 
         if instance.value().len() < 1 {
@@ -60,8 +57,12 @@ impl Index {
             .cast::<HtmlInputElement>()
             .unwrap()
             .value();
-        storage.set_item(&"apikey", &apikey);
-        storage.set_item(&"instance", &instance);
+        storage
+            .set_item(&"apikey", &apikey)
+            .expect("Was not able to write to sessionStorage.");
+        storage
+            .set_item(&"instance", &instance)
+            .expect("Was not able to write to sessionStorage.");
     }
 }
 

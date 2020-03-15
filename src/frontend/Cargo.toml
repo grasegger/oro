@@ -44,7 +44,8 @@ features = [
   'Window',
   'console',
   'NodeList',
-  'HtmlInputElement'
+  'HtmlInputElement',
+  'Location'
 ]
 
 [features]

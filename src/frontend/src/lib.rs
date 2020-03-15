@@ -9,10 +9,11 @@ extern crate yew_router;
 use wasm_bindgen::prelude::*;
 
 mod components;
+mod views;
 
 // Called by our JS entry point
 #[wasm_bindgen]
 pub fn run() -> Result<(), JsValue> {
-    yew::start_app::<components::index::Index>();
+    yew::start_app::<views::index::Index>();
     Ok(())
 }

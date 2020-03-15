@@ -1,8 +1,8 @@
-use yew::{html, Html, Component, ComponentLink};
-use yew_router::{ Switch};
+use views::clock::Model;
+use views::login::Login;
+use yew::{html, Component, ComponentLink, Html};
 use yew_router::router::Router;
-use components::login::Login;
-use components::clock::Model;
+use yew_router::Switch;
 
 #[derive(Switch, Debug, Clone)]
 pub enum AppRoute {

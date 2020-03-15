@@ -4,6 +4,7 @@ use crate::components::nes_container::NesContainer;
 use yew::services::fetch::Response;
 use yew::format::Json;
 use yew::services::fetch::FetchService;
+use yew::services::fetch::FetchTask;
 use crate::components::nes_field::NesField;
 use crate::components::nes_form::NesForm;
 use crate::components::nes_input::{InputType, NesInput};
@@ -16,18 +17,18 @@ pub struct Login {
     link: ComponentLink<Self>,
     instance_ref: NodeRef,
     apikey_ref: NodeRef,
+    _fetch_task: Option<FetchTask>,
 }
 
 pub enum Msg {
     Login,
     LoginValidated(MiteAccount),
     Delete,
-    FetchResourceFailed,
 }
 
 impl Login {
 
-    fn check_credentials(&self) -> bool {
+    fn check_credentials(&mut self) -> bool {
         let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap();
 
         if instance.value().len() < 1 {
@@ -53,8 +54,7 @@ impl Login {
             
             let link_clone = self.link.clone();
 
-                         //Err(error) => link_clone.send_message(Msg::FetchResourceFailed),
-            FetchService::new()
+            self._fetch_task = Some (FetchService::new()
                 .fetch(
                     request,
                     (move |response: Response<Json<anyhow::Result<MiteAccount>>>| match response
@@ -66,7 +66,7 @@ impl Login {
                      })
                     .into(),
                     )
-                .unwrap();
+                .unwrap());
         }
         instance.value().len() > 0 && apikey.value().len() > 0
     }
@@ -102,6 +102,7 @@ impl Component for Login {
             link: link,
             instance_ref: NodeRef::default(),
             apikey_ref: NodeRef::default(),
+            _fetch_task: None,
         }
     }
 
@@ -115,9 +116,6 @@ impl Component for Login {
                 let window = web_sys::window().expect("no global `window` exists");
 
                 console::log_1(&format!("{:?}", body).into());
-            }
-            Msg::FetchResourceFailed => {
-                console::log_1(&"no".into());
             }
             Msg::Delete => {
                 let window = web_sys::window().expect("no global `window` exists");

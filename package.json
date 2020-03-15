@@ -10,7 +10,7 @@
     "sass": "^1.26.3"
   },
   "scripts": {
-    "dev": "parcel src/index.pug",
+    "dev": "parcel src/index.pug --https",
     "build": "parcel build src/index.pug",
     "pages": "npm run build; mv dist/* ."
   },

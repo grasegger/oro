@@ -15,6 +15,7 @@ impl MiteAccount {
 
           Request::get(url)
                .header("X-MiteApiKey", apikey)
+               .header("User-Agent", "oro/0.0.0 (https://github.com/grasegger/oro) custom")
                .body(Nothing)
                .expect("Failed to build request.")
     }

@@ -32,6 +32,7 @@ features = ["web_sys"]
 
 [dependencies.yew-router]
 version = "0.11.0"
+features = ["web_sys"] 
 
 [dependencies.web-sys]
 version = "0.3"
@@ -43,7 +44,8 @@ features = [
   'Window',
   'console',
   'NodeList',
-  'HtmlInputElement'
+  'HtmlInputElement',
+  'Location'
 ]
 
 [features]

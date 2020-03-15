@@ -1,5 +1,4 @@
-use yew::{html, Renderable, Children, Properties, Component, ComponentLink, Html, ShouldRender};
-
+use yew::{html, Children, Component, ComponentLink, Html, Properties, Renderable, ShouldRender};
 
 pub struct NesField {
     link: ComponentLink<Self>,
@@ -8,9 +7,8 @@ pub struct NesField {
 
 #[derive(Clone, Properties)]
 pub struct Props {
-	pub children: Children,
+    pub children: Children,
 }
-
 
 impl Component for NesField {
     type Properties = Props;
@@ -20,15 +18,15 @@ impl Component for NesField {
         NesField { link, props }
     }
 
-    fn update(&mut self, _msg: Self::Message,) -> ShouldRender {
-	    true
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+        true
     }
 
     fn view(&self) -> Html {
         html! {
-		<div class="nes-field">
-		{ self.props.children.render() }
-		</div>
+        <div class="nes-field">
+        { self.props.children.render() }
+        </div>
         }
     }
 }

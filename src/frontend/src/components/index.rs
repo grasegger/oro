@@ -1,10 +1,10 @@
-use yew::{html, Component, ComponentLink, Html, ShouldRender, NodeRef};
-use web_sys::{console, HtmlInputElement};
+use components::nes_button::{ButtonState, NesButton};
 use components::nes_container::NesContainer;
-use components::nes_form::NesForm;
 use components::nes_field::NesField;
-use components::nes_input::{NesInput, InputType};
-use components::nes_button::{NesButton, ButtonState};
+use components::nes_form::NesForm;
+use components::nes_input::{InputType, NesInput};
+use web_sys::{console, HtmlInputElement};
+use yew::{html, Component, ComponentLink, Html, NodeRef, ShouldRender};
 
 pub struct Index {
     link: ComponentLink<Self>,
@@ -13,17 +13,16 @@ pub struct Index {
 }
 
 pub enum Msg {
-	Login,
-	Delete,
+    Login,
+    Delete,
 }
 
-
 impl Index {
-	fn check_credentials(&self) -> bool {
-	    let window = web_sys::window().expect("no global `window` exists");
-	    let document = window.document().expect("should have a document on window");
-		
-		let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap();
+    fn check_credentials(&self) -> bool {
+        let window = web_sys::window().expect("no global `window` exists");
+        let document = window.document().expect("should have a document on window");
+
+        let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap();
 
         if instance.value().len() < 1 {
             let cls = instance.class_name();
@@ -33,7 +32,7 @@ impl Index {
             instance.set_class_name(&cls.replace(" is-error", ""));
         }
 
-		let apikey = self.apikey_ref.cast::<HtmlInputElement>().unwrap();
+        let apikey = self.apikey_ref.cast::<HtmlInputElement>().unwrap();
 
         if apikey.value().len() < 1 {
             let cls = apikey.class_name();
@@ -46,14 +45,21 @@ impl Index {
         // TODO check with the mite api
 
         instance.value().len() > 0 && apikey.value().len() > 0
-	}
+    }
 
     fn store_credentials(&self) {
         let window = web_sys::window().expect("no global `window` exists");
-        let storage = window.session_storage().expect("session storage not enabled.").unwrap();
+        let storage = window
+            .session_storage()
+            .expect("session storage not enabled.")
+            .unwrap();
 
-		let apikey = self.apikey_ref.cast::<HtmlInputElement>().unwrap().value();
-		let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap().value();
+        let apikey = self.apikey_ref.cast::<HtmlInputElement>().unwrap().value();
+        let instance = self
+            .instance_ref
+            .cast::<HtmlInputElement>()
+            .unwrap()
+            .value();
         storage.set_item(&"apikey", &apikey);
         storage.set_item(&"instance", &instance);
     }
@@ -64,45 +70,49 @@ impl Component for Index {
     type Properties = ();
 
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
-        Index { link: link, instance_ref: NodeRef::default(), apikey_ref: NodeRef::default()}
+        Index {
+            link: link,
+            instance_ref: NodeRef::default(),
+            apikey_ref: NodeRef::default(),
+        }
     }
 
-    fn update(&mut self, msg: Self::Message,) -> ShouldRender {
-	    match msg {
-		    Msg::Login => {
-				if self.check_credentials() {
+    fn update(&mut self, msg: Self::Message) -> ShouldRender {
+        match msg {
+            Msg::Login => {
+                if self.check_credentials() {
                     self.store_credentials();
                     // TODO routing
                 }
-		    },
-		    Msg::Delete => {
-			    console::log_1(&"delete".into());
-		    }
-	    }
-	    true
+            }
+            Msg::Delete => {
+                console::log_1(&"delete".into());
+            }
+        }
+        true
     }
 
     fn view(&self) -> Html {
         html! {
-		<NesContainer title="Create Your Character">
-			<NesForm>
-				<NesField>
-				<NesInput ref={self.instance_ref.clone()} identifier="instance" label="What mite realm do you serve for?" itype=InputType::Text />
-				</NesField>
+            <NesContainer title="Create Your Character">
+                <NesForm>
+                    <NesField>
+                    <NesInput ref={self.instance_ref.clone()} identifier="instance" label="What mite realm do you serve for?" itype=InputType::Text />
+                    </NesField>
 
-				<NesField>
-				<NesInput ref={self.apikey_ref.clone()} identifier="apikey" label="How may you be identified?" itype=InputType::Password />
-				</NesField>
-				
-				<NesField>
-					<NesButton description="Start Adventure" bstate=ButtonState::Primary onsignal=self.link.callback(|_| Msg::Login) />
-				</NesField>
+                    <NesField>
+                    <NesInput ref={self.apikey_ref.clone()} identifier="apikey" label="How may you be identified?" itype=InputType::Password />
+                    </NesField>
 
-				<NesField>
-					<NesButton description="Delete Save File" bstate=ButtonState::Warning onsignal=self.link.callback(|_| Msg::Delete) />
-				</NesField>
-			</NesForm>
-		</NesContainer>
-	}
+                    <NesField>
+                        <NesButton description="Start Adventure" bstate=ButtonState::Primary onsignal=self.link.callback(|_| Msg::Login) />
+                    </NesField>
+
+                    <NesField>
+                        <NesButton description="Delete Save File" bstate=ButtonState::Warning onsignal=self.link.callback(|_| Msg::Delete) />
+                    </NesField>
+                </NesForm>
+            </NesContainer>
+        }
     }
 }

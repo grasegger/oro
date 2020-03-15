@@ -1,5 +1,5 @@
-use yew::{html, Component, ComponentLink, Html, ShouldRender};
 use web_sys::console;
+use yew::{html, Component, ComponentLink, Html, ShouldRender};
 
 pub struct Model {
     link: ComponentLink<Self>,
@@ -8,7 +8,6 @@ pub struct Model {
 pub enum Msg {
     Click,
 }
-
 
 impl Component for Model {
     type Message = Msg;
@@ -20,9 +19,7 @@ impl Component for Model {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::Click => {
-				console::log_1(&"clock".into())
-			}
+            Msg::Click => console::log_1(&"clock".into()),
         }
         true
     }

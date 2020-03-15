@@ -1,5 +1,4 @@
-use yew::{html, Renderable, Children, Properties, Component, ComponentLink, Html, ShouldRender};
-
+use yew::{html, Children, Component, ComponentLink, Html, Properties, Renderable, ShouldRender};
 
 pub struct NesForm {
     link: ComponentLink<Self>,
@@ -8,9 +7,8 @@ pub struct NesForm {
 
 #[derive(Clone, Properties)]
 pub struct Props {
-	pub children: Children,
+    pub children: Children,
 }
-
 
 impl Component for NesForm {
     type Properties = Props;
@@ -20,15 +18,15 @@ impl Component for NesForm {
         NesForm { link, props }
     }
 
-    fn update(&mut self, _msg: Self::Message,) -> ShouldRender {
-	    true
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+        true
     }
 
     fn view(&self) -> Html {
         html! {
-		<form>
-		{ self.props.children.render() }
-		</form>
+        <form>
+        { self.props.children.render() }
+        </form>
         }
     }
 }

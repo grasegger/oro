@@ -1,5 +1,4 @@
-use yew::{html, Renderable, Children, Properties, Component, ComponentLink, Html, ShouldRender};
-
+use yew::{html, Children, Component, ComponentLink, Html, Properties, Renderable, ShouldRender};
 
 pub struct NesContainer {
     link: ComponentLink<Self>,
@@ -8,15 +7,14 @@ pub struct NesContainer {
 
 #[derive(Clone, Properties)]
 pub struct Props {
-	#[prop_or_default]	
-	pub title: Option<String>,
-	#[prop_or(false)]
-	pub centered: bool,
-	#[prop_or(false)]
-	pub dark: bool,
-	pub children: Children,
+    #[prop_or_default]
+    pub title: Option<String>,
+    #[prop_or(false)]
+    pub centered: bool,
+    #[prop_or(false)]
+    pub dark: bool,
+    pub children: Children,
 }
-
 
 impl Component for NesContainer {
     type Properties = Props;
@@ -26,37 +24,39 @@ impl Component for NesContainer {
         NesContainer { link, props }
     }
 
-    fn update(&mut self, _msg: Self::Message,) -> ShouldRender {
-	    true
+    fn update(&mut self, _msg: Self::Message) -> ShouldRender {
+        true
     }
 
     fn view(&self) -> Html {
-	let mut classes = "nes-container".into();
-	if self.props.title.is_some() {
-		classes = format!("{} {}", classes, "with-title")
-	}
-	
-	if self.props.dark {
-		classes = format!("{} {}", classes, "is-dark")
-	}
+        let mut classes = "nes-container".into();
+        if self.props.title.is_some() {
+            classes = format!("{} {}", classes, "with-title")
+        }
 
-	if self.props.centered {
-		classes = format!("{} {}", classes, "is-centered")
-	}
+        if self.props.dark {
+            classes = format!("{} {}", classes, "is-dark")
+        }
 
-	let maybe_render_label = move || -> Html {
-		if self.props.title.is_some() {
-			html! {
-				<p class="title">{self.props.title.as_ref().unwrap()}</p>
-			}
-		} else { html! {} }
-	};
+        if self.props.centered {
+            classes = format!("{} {}", classes, "is-centered")
+        }
+
+        let maybe_render_label = move || -> Html {
+            if self.props.title.is_some() {
+                html! {
+                    <p class="title">{self.props.title.as_ref().unwrap()}</p>
+                }
+            } else {
+                html! {}
+            }
+        };
 
         html! {
-		<div class={classes}>
-		{ maybe_render_label () }
-		{ self.props.children.render() }
-		</div>
+        <div class={classes}>
+        { maybe_render_label () }
+        { self.props.children.render() }
+        </div>
         }
     }
 }

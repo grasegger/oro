@@ -1,5 +1,5 @@
-use views::clock::Model;
-use views::login::Login;
+use crate::views::clock::Model;
+use crate::views::login::Login;
 use yew::{html, Component, ComponentLink, Html};
 use yew_router::router::Router;
 use yew_router::Switch;

@@ -1,5 +1,5 @@
 use super::secure_view::SecureView;
-use components::nes_button::NesButton;
+use crate::components::nes_button::NesButton;
 use web_sys::console;
 use yew::{html, Component, ComponentLink, Html, ShouldRender};
 

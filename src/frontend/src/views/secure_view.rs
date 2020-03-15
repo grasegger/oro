@@ -1,6 +1,6 @@
-use components::nes_container::NesContainer;
-use components::nes_link_button::ButtonState;
-use components::nes_link_button::NesLinkButton;
+use crate::components::nes_container::NesContainer;
+use crate::components::nes_link_button::ButtonState;
+use crate::components::nes_link_button::NesLinkButton;
 use yew::{html, Html};
 
 pub trait SecureView {

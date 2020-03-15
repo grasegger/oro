@@ -1,10 +1,16 @@
-use components::nes_button::{ButtonState, NesButton};
-use components::nes_container::NesContainer;
-use components::nes_field::NesField;
-use components::nes_form::NesForm;
-use components::nes_input::{InputType, NesInput};
+use crate::components::nes_button::{ButtonState, NesButton};
+use crate::components::nes_container::NesContainer;
+use yew::services::fetch::Response;
+use yew::services::fetch::Request;
+use yew::format::Json;
+use yew::services::fetch::FetchService;
+use crate::components::nes_field::NesField;
+use crate::components::nes_form::NesForm;
+use crate::components::nes_input::{InputType, NesInput};
 use web_sys::HtmlInputElement;
+use web_sys::console;
 use yew::{html, Component, ComponentLink, Html, NodeRef, ShouldRender};
+use crate::mite::account::MiteAccount;
 
 pub struct Login {
     link: ComponentLink<Self>,
@@ -14,10 +20,13 @@ pub struct Login {
 
 pub enum Msg {
     Login,
+    LoginValidated(MiteAccount),
     Delete,
+    FetchResourceFailed,
 }
 
 impl Login {
+
     fn check_credentials(&self) -> bool {
         let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap();
 
@@ -39,8 +48,25 @@ impl Login {
             apikey.set_class_name(&cls.replace(" is-error", ""));
         }
 
-        // TODO check with the mite api
+        if instance.value().len() > 0 && apikey.value().len() > 0 {
+            let request =  MiteAccount::getAccount(instance.value(), apikey.value());
+            
+            let link_clone = self.link.clone();
 
+            FetchService::new()
+                .fetch(
+                    request,
+                    (move |response: Response<Json<anyhow::Result<MiteAccount>>>| match response
+                     .into_body()
+                     .0
+                     {
+                         Ok(data) => link_clone.send_message(Msg::LoginValidated(data)),
+                         Err(error) => link_clone.send_message(Msg::FetchResourceFailed),
+                     })
+                    .into(),
+                    )
+                .unwrap();
+        }
         instance.value().len() > 0 && apikey.value().len() > 0
     }
 
@@ -81,15 +107,16 @@ impl Component for Login {
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
             Msg::Login => {
-                if self.check_credentials() {
-                    self.store_credentials();
+                self.check_credentials();
+            }
+            Msg::LoginValidated(body) => {
+                self.store_credentials();
+                let window = web_sys::window().expect("no global `window` exists");
 
-                    let window = web_sys::window().expect("no global `window` exists");
-                    window
-                        .location()
-                        .set_href(&"/")
-                        .expect("was not able to naviagte.");
-                }
+                console::log_1(&format!("{:?}", body).into());
+            }
+            Msg::FetchResourceFailed => {
+                console::log_1(&"no".into());
             }
             Msg::Delete => {
                 let window = web_sys::window().expect("no global `window` exists");

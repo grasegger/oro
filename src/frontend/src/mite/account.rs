@@ -10,7 +10,7 @@ pub struct MiteAccount {
 }
 
 impl MiteAccount {
-    pub fn getAccount(instance: String, apikey: String) -> Request<Nothing> {
+    pub fn get_account(instance: String, apikey: String) -> Request<Nothing> {
            let url = format!("https://{}.mite.yo.lk/account.json?api_key={}", instance, apikey);
 
           Request::get(url)

@@ -2,8 +2,12 @@ use crate::components::nes_button::{ButtonState, NesButton};
 use wasm_bindgen::JsValue;
 use crate::components::nes_container::NesContainer;
 use yew::services::fetch::Response;
+use yew::services::fetch::Referrer;
+use yew::services::fetch::Mode;
+use yew::services::fetch::Cache;
 use yew::format::Json;
 use yew::services::fetch::FetchService;
+use yew::services::fetch::FetchOptions;
 use yew::services::fetch::FetchTask;
 use crate::components::nes_field::NesField;
 use crate::components::nes_form::NesForm;
@@ -50,23 +54,30 @@ impl Login {
         }
 
         if instance.value().len() > 0 && apikey.value().len() > 0 {
-            let request =  MiteAccount::getAccount(instance.value(), apikey.value());
+            let request =  MiteAccount::get_account(instance.value(), apikey.value());
             
             let link_clone = self.link.clone();
+            let options = FetchOptions {
+                mode: Some(Mode::NoCors),
+                referrer: Some(Referrer::Empty),
+                cache:Some(Cache::NoCache),
+                ..FetchOptions::default()
+            };
 
             self._fetch_task = Some (FetchService::new()
-                .fetch(
-                    request,
-                    (move |response: Response<Json<anyhow::Result<MiteAccount>>>| match response
-                     .into_body()
-                     .0
-                     {
-                         Ok(data) => link_clone.send_message(Msg::LoginValidated(data)),
-                         Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
-                     })
-                    .into(),
-                    )
-                .unwrap());
+                                     .fetch_with_options(
+                                         request,
+                                         options,
+                                         (move |response: Response<Json<anyhow::Result<MiteAccount>>>| match response
+                                          .into_body()
+                                          .0
+                                          {
+                                              Ok(data) => link_clone.send_message(Msg::LoginValidated(data)),
+                                              Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
+                                          })
+                                         .into(),
+                                         )
+                                     .unwrap());
         }
         instance.value().len() > 0 && apikey.value().len() > 0
     }
@@ -113,7 +124,7 @@ impl Component for Login {
             }
             Msg::LoginValidated(body) => {
                 self.store_credentials();
-                let window = web_sys::window().expect("no global `window` exists");
+                // let window = web_sys::window().expect("no global `window` exists");
 
                 console::log_1(&format!("{:?}", body).into());
             }

@@ -50,11 +50,12 @@ features = [
   'console',
   'NodeList',
   'HtmlInputElement',
-'Headers',
-	'Request',
+  'Headers',
+  'Request',
   'RequestInit',
   'RequestMode',
   'Response',
+  'RequestCache'
 ]
 
 [features]

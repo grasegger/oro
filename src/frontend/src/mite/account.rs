@@ -14,7 +14,6 @@ impl MiteAccount {
         let url = "https://corsapi.mite.yo.lk/account.json";
 
         Request::get(url)
-            .header("X-MyTest", "SomeTestHeader!")
             .header("X-MiteAccount", instance)
             .header("X-MiteApiKey", apikey)
             .body(Nothing)

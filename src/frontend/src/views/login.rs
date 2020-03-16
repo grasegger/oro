@@ -2,12 +2,8 @@ use crate::components::nes_button::{ButtonState, NesButton};
 use wasm_bindgen::JsValue;
 use crate::components::nes_container::NesContainer;
 use yew::services::fetch::Response;
-use yew::services::fetch::Referrer;
-use yew::services::fetch::Mode;
-use yew::services::fetch::Cache;
 use yew::format::Json;
 use yew::services::fetch::FetchService;
-use yew::services::fetch::FetchOptions;
 use yew::services::fetch::FetchTask;
 use crate::components::nes_field::NesField;
 use crate::components::nes_form::NesForm;
@@ -57,17 +53,10 @@ impl Login {
             let request =  MiteAccount::get_account(instance.value(), apikey.value());
             
             let link_clone = self.link.clone();
-            let options = FetchOptions {
-                mode: Some(Mode::NoCors),
-                referrer: Some(Referrer::Empty),
-                cache:Some(Cache::NoCache),
-                ..FetchOptions::default()
-            };
 
             self._fetch_task = Some (FetchService::new()
-                                     .fetch_with_options(
+                                     .fetch(
                                          request,
-                                         options,
                                          (move |response: Response<Json<anyhow::Result<MiteAccount>>>| match response
                                           .into_body()
                                           .0

@@ -11,10 +11,13 @@ pub struct MiteAccount {
 
 impl MiteAccount {
     pub fn get_account(instance: String, apikey: String) -> Request<Nothing> {
-           let url = format!("https://{}.mite.yo.lk/account.json?api_key={}", instance, apikey);
+        let url = "https://corsapi.mite.yo.lk/account.json";
 
-          Request::get(url)
-               .body(Nothing)
-               .expect("Failed to build request.")
+        Request::get(url)
+            .header("X-MyTest", "SomeTestHeader!")
+            .header("X-MiteAccount", instance)
+            .header("X-MiteApiKey", apikey)
+            .body(Nothing)
+            .expect("Failed to build request.")
     }
 }

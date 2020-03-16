@@ -55,7 +55,8 @@ features = [
   'RequestInit',
   'RequestMode',
   'Response',
-  'RequestCache'
+  'RequestCache',
+  'Headers'
 ]
 
 [features]

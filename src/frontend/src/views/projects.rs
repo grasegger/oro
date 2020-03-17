@@ -75,10 +75,8 @@ impl Component for Projects {
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::ProjectsLoaded (data) => {
-                for p in data {
-                    self.projects.push(p);
-                }
+            Msg::ProjectsLoaded (mut data) => {
+                self.projects.append(&mut data);
                 console::log_1(&self.projects.len().to_string().into());
             }
         }

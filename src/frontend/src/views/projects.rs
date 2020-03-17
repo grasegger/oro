@@ -93,22 +93,22 @@ impl Component for Projects {
             }
             Msg::ProjectsParsed => {
                 self.projects.into_iter().map(                 |p|                     {
-                        let request = p.project.get_client_for_project(Projects::get_instance(), Projects::get_api_key());
-                        self.customer_fetch_tasks.push(
-                            FetchService::new()
-                            .fetch(
-                                request,
-                                (move |response: Response<Json<anyhow::Result<MiteCustomer>>>| match response
-                                 .into_body()
-                                 .0
-                                 {
-                                     Ok(data) => self.link.clone().send_message(Msg::CustomerLoaded(data)),
-                                     Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
-                                 })
-                                .into()
-                                )
-                            .unwrap()
+                    let request = p.project.get_client_for_project(Projects::get_instance(), Projects::get_api_key());
+                    self.customer_fetch_tasks.push(
+                        FetchService::new()
+                        .fetch(
+                            request,
+                            (move |response: Response<Json<anyhow::Result<MiteCustomer>>>| match response
+                             .into_body()
+                             .0
+                             {
+                                 Ok(data) => self.link.clone().send_message(Msg::CustomerLoaded(data)),
+                                 Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
+                             })
+                            .into()
                             )
+                        .unwrap()
+                        )
                 }                )
             }
             Msg::CustomerLoaded(customer) => {

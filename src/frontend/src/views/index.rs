@@ -1,4 +1,4 @@
-use crate::views::clock::Model;
+use crate::views::projects::Projects;
 use crate::views::login::Login;
 use yew::{html, Component, ComponentLink, Html};
 use yew_router::router::Router;
@@ -34,7 +34,7 @@ impl Component for Index {
             <Router<AppRoute, ()>
                 render = Router::render(|switch: AppRoute| {
                     match switch {
-                        AppRoute::Index => html!{<Model/>},
+                        AppRoute::Index => html!{<Projects/>},
                         AppRoute::Login => html!{<Login/>},
                     }
                 })

@@ -111,11 +111,10 @@ impl Component for Login {
             Msg::Login => {
                 self.check_credentials();
             }
-            Msg::LoginValidated(body) => {
+            Msg::LoginValidated(_body) => {
                 self.store_credentials();
-                // let window = web_sys::window().expect("no global `window` exists");
-
-                console::log_1(&format!("{:?}", body).into());
+                let window = web_sys::window().expect("no global `window` exists");
+                window.location().set_href("/");
             }
             Msg::Delete => {
                 let window = web_sys::window().expect("no global `window` exists");

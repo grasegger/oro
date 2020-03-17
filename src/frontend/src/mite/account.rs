@@ -4,6 +4,11 @@ use yew::format::nothing::Nothing;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MiteAccount {
+    account: MiteAccountDetails,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct MiteAccountDetails {
     id: i32,
     name: String,
     title: String

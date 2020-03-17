@@ -16,12 +16,14 @@ use wasm_bindgen::JsValue;
 pub struct Projects {
     link: ComponentLink<Self>,
     _fetch_task: Option<FetchTask>,
-    projects: Vec<MiteProject>
+    projects: Vec<MiteProject>,
+    customer_fetch_tasks: Vec<FetchTask>,
 }
 
 pub enum Msg {
    ProjectsLoaded(Vec<MiteProject>),
    CustomerLoaded(MiteCustomer),
+   ProjectsParsed,
 }
 
 impl Projects {
@@ -78,7 +80,8 @@ impl Component for Projects {
         Projects { 
             link, 
             _fetch_task: Projects::load_data(link_clone),
-            projects: Vec::<MiteProject>::new()
+            projects: Vec::<MiteProject>::new(),
+            customer_fetch_tasks: Vec::<FetchTask>::new()
         }
     }
 
@@ -86,9 +89,33 @@ impl Component for Projects {
         match msg {
             Msg::ProjectsLoaded (mut data) => {
                 self.projects.append(&mut data);
+                self.link.send_message(Msg::ProjectsParsed);
+            }
+            Msg::ProjectsParsed => {
+                self.projects.into_iter().map(                 |p|                     {
+                        let request = p.project.get_client_for_project(Projects::get_instance(), Projects::get_api_key());
+                        self.customer_fetch_tasks.push(
+                            FetchService::new()
+                            .fetch(
+                                request,
+                                (move |response: Response<Json<anyhow::Result<MiteCustomer>>>| match response
+                                 .into_body()
+                                 .0
+                                 {
+                                     Ok(data) => self.link.clone().send_message(Msg::CustomerLoaded(data)),
+                                     Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
+                                 })
+                                .into()
+                                )
+                            .unwrap()
+                            )
+                }                )
+            }
+            Msg::CustomerLoaded(customer) => {
+                console::log_1(&format!("{:?}", customer).into());
             }
         }
-       return true; 
+        true
     }
 
     fn view(&self) -> Html {

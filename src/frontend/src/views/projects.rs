@@ -1,9 +1,12 @@
 use super::secure_view::SecureView;
-//use crate::components::nes_button::NesButton;
+use crate::components::nes_link_button::NesLinkButton;
+use crate::components::nes_link_button::ButtonState;
 use crate::components::nes_container::NesContainer;
+use crate::components::nes_field::NesField;
 use web_sys::console;
 use yew::{html, Component, ComponentLink, Html, ShouldRender};
 use crate::mite::support_projects::MiteProject;
+use crate::mite::customer::MiteCustomer;
 use yew::services::fetch::Response;
 use yew::format::Json;
 use yew::services::fetch::FetchService;
@@ -18,6 +21,7 @@ pub struct Projects {
 
 pub enum Msg {
    ProjectsLoaded(Vec<MiteProject>),
+   CustomerLoaded(MiteCustomer),
 }
 
 impl Projects {
@@ -43,7 +47,13 @@ impl Projects {
     fn render_item(project : & MiteProject) -> Html
     {
         html! {
-            <p>{project.project.name.clone()}</p>
+            <NesField>
+                <NesContainer title={project.project.id.to_string().clone()}>
+                    <p>{project.project.name.clone()}</p>
+
+                    <NesLinkButton bstate=ButtonState::Success description="Open in mite" href={format!("https://{}.mite.yo.lk/project/{}", Projects::get_instance(), project.project.id)} />
+                </NesContainer>
+            </NesField>
         }
     }
 }
@@ -53,9 +63,8 @@ impl SecureView for Projects {
         html! {
             <NesContainer title="Support-Projekte">
                 <>
-                {self.projects.len()}
-                { for self.projects.iter().map(|p| Projects::render_item(p)) }
-            </>
+                    { for self.projects.iter().map(|p| Projects::render_item(p)) }
+                </>
             </NesContainer>
         }
     } }
@@ -77,10 +86,9 @@ impl Component for Projects {
         match msg {
             Msg::ProjectsLoaded (mut data) => {
                 self.projects.append(&mut data);
-                console::log_1(&self.projects.len().to_string().into());
             }
         }
-        true
+       return true; 
     }
 
     fn view(&self) -> Html {

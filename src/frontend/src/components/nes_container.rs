@@ -29,6 +29,11 @@ impl Component for NesContainer {
         true
     }
 
+    fn change(&mut self, props: Self::Properties) -> ShouldRender {
+        self.props = props;
+        true
+    }
+
     fn view(&self) -> Html {
         let mut classes = "nes-container".into();
         if self.props.title.is_some() {
@@ -54,10 +59,10 @@ impl Component for NesContainer {
         };
 
         html! {
-        <div class={classes}>
-        { maybe_render_label () }
-        { self.props.children.render() }
-        </div>
+            <div class={classes}>
+            { maybe_render_label () }
+            { self.props.children.render() }
+            </div>
         }
     }
 }

@@ -117,7 +117,7 @@ impl Component for Login {
             Msg::LoginValidated(_body) => {
                 self.store_credentials();
                 let window = web_sys::window().expect("no global `window` exists");
-                window.location().set_href("/");
+                window.location().set_href("/").expect("Could not change location.");
             }
             Msg::Delete => {
                 let window = web_sys::window().expect("no global `window` exists");

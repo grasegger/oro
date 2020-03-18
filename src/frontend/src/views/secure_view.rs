@@ -44,7 +44,7 @@ pub trait SecureView {
             html! {
                 <NesContainer dark=true title="Uh-Oh!">
                     <p>{"I don't remember you. :( Please create a new character."}</p>
-                    <NesLinkButton bstate=ButtonState::Primary href="/login" description="Create Character" />
+                    <NesLinkButton bstate=ButtonState::Primary href="./login" description="Create Character" />
                 </NesContainer>
             }
         }

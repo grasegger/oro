@@ -1,3 +1,5 @@
+use super::secure_view::SecureView;
+use crate::components::nes_button::NesButton;
 use web_sys::console;
 use yew::{html, Component, ComponentLink, Html, ShouldRender};
 
@@ -7,6 +9,16 @@ pub struct Model {
 
 pub enum Msg {
     Click,
+}
+
+impl SecureView for Model {
+    fn render_secured_view(&self) -> Html {
+        html! {
+            <div>
+                <NesButton onsignal=self.link.callback(|_| Msg::Click) description={"Clock"} />
+            </div>
+        }
+    }
 }
 
 impl Component for Model {
@@ -25,10 +37,6 @@ impl Component for Model {
     }
 
     fn view(&self) -> Html {
-        html! {
-            <div>
-                <button onclick=self.link.callback(|_| Msg::Click)>{ "Clock" }</button>
-            </div>
-        }
+        self.secured_view()
     }
 }

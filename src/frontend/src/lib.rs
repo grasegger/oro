@@ -14,6 +14,7 @@ use wasm_bindgen::prelude::*;
 pub mod components;
 pub mod mite;
 pub mod views;
+pub mod support;
 
 // Called by our JS entry point
 #[wasm_bindgen]

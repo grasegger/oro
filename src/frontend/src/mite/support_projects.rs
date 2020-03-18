@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use yew::services::fetch::Request;
 use yew::format::nothing::Nothing;
+use yew::services::fetch::Request;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct MiteProject {
@@ -30,8 +30,11 @@ impl MiteProject {
 }
 
 impl MiteProjectDetails {
-    pub fn get_client_for_project (&self, instance: String, apikey: String) -> Request<Nothing> {
-        let url = format!("https://corsapi.mite.yo.lk/customers/{}.json", self.customer_id.unwrap());
+    pub fn get_client_for_project(&self, instance: String, apikey: String) -> Request<Nothing> {
+        let url = format!(
+            "https://corsapi.mite.yo.lk/customers/{}.json",
+            self.customer_id.unwrap()
+        );
 
         Request::get(url)
             .header("X-MiteAccount", instance)
@@ -39,5 +42,4 @@ impl MiteProjectDetails {
             .body(Nothing)
             .expect("Failed to build request.")
     }
-
 }

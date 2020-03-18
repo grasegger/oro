@@ -1,17 +1,17 @@
 use crate::components::nes_button::{ButtonState, NesButton};
-use wasm_bindgen::JsValue;
 use crate::components::nes_container::NesContainer;
-use yew::services::fetch::Response;
-use yew::format::Json;
-use yew::services::fetch::FetchService;
-use yew::services::fetch::FetchTask;
 use crate::components::nes_field::NesField;
 use crate::components::nes_form::NesForm;
 use crate::components::nes_input::{InputType, NesInput};
-use web_sys::HtmlInputElement;
-use web_sys::console;
-use yew::{html, Component, ComponentLink, Html, NodeRef, ShouldRender};
 use crate::mite::account::MiteAccount;
+use wasm_bindgen::JsValue;
+use web_sys::console;
+use web_sys::HtmlInputElement;
+use yew::format::Json;
+use yew::services::fetch::FetchService;
+use yew::services::fetch::FetchTask;
+use yew::services::fetch::Response;
+use yew::{html, Component, ComponentLink, Html, NodeRef, ShouldRender};
 
 pub struct Login {
     link: ComponentLink<Self>,
@@ -27,7 +27,6 @@ pub enum Msg {
 }
 
 impl Login {
-
     fn check_credentials(&mut self) -> bool {
         let instance = self.instance_ref.cast::<HtmlInputElement>().unwrap();
 
@@ -50,23 +49,27 @@ impl Login {
         }
 
         if instance.value().len() > 0 && apikey.value().len() > 0 {
-            let request =  MiteAccount::get_account(instance.value(), apikey.value());
-            
+            let request = MiteAccount::get_account(instance.value(), apikey.value());
+
             let link_clone = self.link.clone();
 
-            self._fetch_task = Some (FetchService::new()
-                                     .fetch(
-                                         request,
-                                         (move |response: Response<Json<anyhow::Result<MiteAccount>>>| match response
-                                          .into_body()
-                                          .0
-                                          {
-                                              Ok(data) => link_clone.send_message(Msg::LoginValidated(data)),
-                                              Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
-                                          })
-                                         .into(),
-                                         )
-                                     .unwrap());
+            self._fetch_task =
+                Some(
+                    FetchService::new()
+                        .fetch(
+                            request,
+                            (move |response: Response<Json<anyhow::Result<MiteAccount>>>| {
+                                match response.into_body().0 {
+                                    Ok(data) => link_clone.send_message(Msg::LoginValidated(data)),
+                                    Err(error) => {
+                                        console::error_1(&JsValue::from_str(&error.to_string()))
+                                    }
+                                }
+                            })
+                            .into(),
+                        )
+                        .unwrap(),
+                );
         }
         instance.value().len() > 0 && apikey.value().len() > 0
     }

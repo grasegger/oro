@@ -17,7 +17,7 @@ pub trait SecureView {
         unimplemented!();
     }
 
-    fn get_api_key () -> String {
+    fn get_api_key() -> String {
         let window = web_sys::window().expect("no global `window` exists");
         let storage = window
             .session_storage()
@@ -27,7 +27,7 @@ pub trait SecureView {
         storage.get_item("apikey").unwrap().unwrap().to_string()
     }
 
-    fn get_instance () -> String {
+    fn get_instance() -> String {
         let window = web_sys::window().expect("no global `window` exists");
         let storage = window
             .session_storage()

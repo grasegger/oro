@@ -31,7 +31,7 @@ impl Component for NesContainer {
 
     fn change(&mut self, props: Self::Properties) -> ShouldRender {
         self.props = props;
-        true 
+        true
     }
 
     fn view(&self) -> Html {

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use yew::services::fetch::Request;
 use yew::format::nothing::Nothing;
+use yew::services::fetch::Request;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MiteAccount {
@@ -11,7 +11,7 @@ pub struct MiteAccount {
 pub struct MiteAccountDetails {
     id: i32,
     name: String,
-    title: String
+    title: String,
 }
 
 impl MiteAccount {

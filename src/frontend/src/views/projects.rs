@@ -1,17 +1,17 @@
 use super::secure_view::SecureView;
-use crate::components::nes_link_button::NesLinkButton;
-use crate::components::nes_link_button::ButtonState;
 use crate::components::nes_container::NesContainer;
 use crate::components::nes_field::NesField;
-use web_sys::console;
-use yew::{html, Component, ComponentLink, Html, ShouldRender};
-use crate::mite::support_projects::MiteProject;
+use crate::components::nes_link_button::ButtonState;
+use crate::components::nes_link_button::NesLinkButton;
 use crate::mite::customer::MiteCustomer;
-use yew::services::fetch::Response;
+use crate::mite::support_projects::MiteProject;
+use wasm_bindgen::JsValue;
+use web_sys::console;
 use yew::format::Json;
 use yew::services::fetch::FetchService;
 use yew::services::fetch::FetchTask;
-use wasm_bindgen::JsValue;
+use yew::services::fetch::Response;
+use yew::{html, Component, ComponentLink, Html, ShouldRender};
 
 pub struct Projects {
     link: ComponentLink<Self>,
@@ -21,33 +21,32 @@ pub struct Projects {
 }
 
 pub enum Msg {
-   ProjectsLoaded(Vec<MiteProject>),
-   CustomerLoaded(MiteCustomer),
-   ProjectsParsed,
+    ProjectsLoaded(Vec<MiteProject>),
+    CustomerLoaded(MiteCustomer),
+    ProjectsParsed,
 }
 
 impl Projects {
     fn load_data(link: ComponentLink<Self>) -> Option<FetchTask> {
-
-        let request =  MiteProject::get_support_projects(Projects::get_instance(), Projects::get_api_key());
-        Some (FetchService::new()
-              .fetch(
-                  request,
-                  (move |response: Response<Json<anyhow::Result<Vec<MiteProject>>>>| match response
-                   .into_body()
-                   .0
-                   {
-                       Ok(data) => link.send_message(Msg::ProjectsLoaded(data)),
-                       Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
-                   })
-                  .into(),
-                  )
-              .unwrap())
+        let request =
+            MiteProject::get_support_projects(Projects::get_instance(), Projects::get_api_key());
+        Some(
+            FetchService::new()
+                .fetch(
+                    request,
+                    (move |response: Response<Json<anyhow::Result<Vec<MiteProject>>>>| {
+                        match response.into_body().0 {
+                            Ok(data) => link.send_message(Msg::ProjectsLoaded(data)),
+                            Err(error) => console::error_1(&JsValue::from_str(&error.to_string())),
+                        }
+                    })
+                    .into(),
+                )
+                .unwrap(),
+        )
     }
 
-
-    fn render_item(project : & MiteProject) -> Html
-    {
+    fn render_item(project: &MiteProject) -> Html {
         html! {
             <NesField>
                 <NesContainer title={project.project.id.to_string().clone()}>
@@ -69,7 +68,8 @@ impl SecureView for Projects {
                 </>
             </NesContainer>
         }
-    } }
+    }
+}
 
 impl Component for Projects {
     type Message = Msg;
@@ -77,40 +77,43 @@ impl Component for Projects {
 
     fn create(_: Self::Properties, link: ComponentLink<Self>) -> Self {
         let link_clone = link.clone();
-        Projects { 
-            link, 
+        Projects {
+            link,
             _fetch_task: Projects::load_data(link_clone),
             projects: Vec::<MiteProject>::new(),
-            customer_fetch_tasks: Vec::<FetchTask>::new()
+            customer_fetch_tasks: Vec::<FetchTask>::new(),
         }
     }
 
     fn update(&mut self, msg: Self::Message) -> ShouldRender {
         match msg {
-            Msg::ProjectsLoaded (mut data) => {
+            Msg::ProjectsLoaded(mut data) => {
                 self.projects.append(&mut data);
                 self.link.send_message(Msg::ProjectsParsed);
             }
-            Msg::ProjectsParsed => {
-                self.projects.into_iter().map(                 |p|                     {
-                    let request = p.project.get_client_for_project(Projects::get_instance(), Projects::get_api_key());
-                    self.customer_fetch_tasks.push(
-                        FetchService::new()
+            Msg::ProjectsParsed => self.projects.into_iter().map(|p| {
+                let request = p
+                    .project
+                    .get_client_for_project(Projects::get_instance(), Projects::get_api_key());
+                self.customer_fetch_tasks.push(
+                    FetchService::new()
                         .fetch(
                             request,
-                            (move |response: Response<Json<anyhow::Result<MiteCustomer>>>| match response
-                             .into_body()
-                             .0
-                             {
-                                 Ok(data) => self.link.clone().send_message(Msg::CustomerLoaded(data)),
-                                 Err(error) => console::error_1( &JsValue::from_str(&error.to_string()))
-                             })
-                            .into()
-                            )
-                        .unwrap()
+                            (move |response: Response<Json<anyhow::Result<MiteCustomer>>>| {
+                                match response.into_body().0 {
+                                    Ok(data) => {
+                                        self.link.clone().send_message(Msg::CustomerLoaded(data))
+                                    }
+                                    Err(error) => {
+                                        console::error_1(&JsValue::from_str(&error.to_string()))
+                                    }
+                                }
+                            })
+                            .into(),
                         )
-                }                )
-            }
+                        .unwrap(),
+                )
+            }),
             Msg::CustomerLoaded(customer) => {
                 console::log_1(&format!("{:?}", customer).into());
             }

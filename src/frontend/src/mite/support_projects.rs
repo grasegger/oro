@@ -28,18 +28,3 @@ impl MiteProject {
             .expect("Failed to build request.")
     }
 }
-
-impl MiteProjectDetails {
-    pub fn get_client_for_project(&self, instance: String, apikey: String) -> Request<Nothing> {
-        let url = format!(
-            "https://corsapi.mite.yo.lk/customers/{}.json",
-            self.customer_id.unwrap()
-        );
-
-        Request::get(url)
-            .header("X-MiteAccount", instance)
-            .header("X-MiteApiKey", apikey)
-            .body(Nothing)
-            .expect("Failed to build request.")
-    }
-}

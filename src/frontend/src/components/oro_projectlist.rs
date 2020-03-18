@@ -1,8 +1,10 @@
 use crate::components::nes_container::NesContainer;
+use serde::{Serialize, Deserialize};
 use crate::components::nes_field::NesField;
 use crate::components::nes_link_button::ButtonState;
 use crate::components::nes_link_button::NesLinkButton;
 use crate::mite::support_projects::MiteProject;
+use crate::support::Contract;
 use wasm_bindgen::JsValue;
 use web_sys::console;
 use yew::format::Json;
@@ -10,6 +12,8 @@ use yew::services::fetch::FetchService;
 use yew::services::fetch::FetchTask;
 use yew::services::fetch::Response;
 use yew::{html, Properties, Component, ComponentLink, Html, ShouldRender};
+use crate::components::oro_customer::Customer;
+use crate::support::SupportPackage;
 
 pub struct ProjectList {
 #[allow(dead_code)]
@@ -48,16 +52,62 @@ impl ProjectList {
                 .unwrap(),
         )
     }
+    
+    fn render_addon(&self, package: SupportPackage) -> Html {
+        html! {
+                <NesField>
+                    <NesContainer title={package.pkgname}>
+                        <p>{format!("CMS: {}", package.cms)}</p>
+                        <p>{format!("Booked: {}hours", package.hours)}</p>
+                        <p>{format!("Starting in Q{}", package.startQuarter)}</p>
+                        <p>{format!("Ending in in Q{}", package.stopQuarter)}</p>
+                        <p>{format!("Yearly: {}", package.yearly)}</p>
+                    </NesContainer>
+                </NesField>
+        }
+    }
 
     fn render_item(&self, project: &MiteProject) -> Html {
-        html! {
-            <NesField>
-                <NesContainer title={project.project.id.to_string().clone()}>
-                    <p>{project.project.name.clone()}</p>
+        if project.project.note.len() < 1 {
+            html!{
+            }
+        } else {
+            let contract: Contract = serde_json::from_str(&project.project.note).unwrap();
+            html! {
+                <NesField>
+                    <NesContainer title={project.project.name.clone()}>
+                        <h2>{contract.variant.title}</h2>
+                        <Customer customer_id={project.project.customer_id.unwrap().to_string()} apikey={self.props.apikey.clone()} instance={self.props.instance.clone()} />
+                <NesField>
+                    <NesContainer title="Base Package">
+                        <p>{format!("Package Name: {}", contract.variant.pkgname)}</p>
+                        <p>{format!("CMS: {}", contract.variant.cms)}</p>
+                        <p>{format!("Booked: {}hours", contract.variant.hours)}</p>
+                        <p>{format!("Starting in Q{}", contract.variant.startQuarter)}</p>
+                        <p>{format!("Ending in in Q{}", contract.variant.stopQuarter)}</p>
+                        <p>{format!("Add carry: {}hours", contract.variant.addCarry)}</p>
+                    </NesContainer>
+                </NesField>
 
-                    <NesLinkButton bstate=ButtonState::Success description="Open in mite" href={format!("https://{}.mite.yo.lk/reports/projects/{}", self.props.instance, project.project.id)} />
+                <NesField>
+                    <NesContainer title={format!("{} Addon(s)", contract.addons.len())}>
+                    {
+                        if contract.addons.len() > 0 {
+                            html! {
+                                { for contract.addons.iter().map(|c| self.render_addon(c.clone())) }
+                            }
+                        } else {
+                            html! {
+                                <p>{"No Addons booked."}</p> 
+                            }
+                        }
+                    }
                 </NesContainer>
-            </NesField>
+                    </NesField>
+                    <NesLinkButton bstate=ButtonState::Success description="Open in mite" href={format!("https://{}.mite.yo.lk/reports/projects/{}", self.props.instance, project.project.id)} />
+                    </NesContainer>
+                    </NesField>
+            }
         }
     }
 }
@@ -87,9 +137,9 @@ impl Component for ProjectList {
 
     fn view(&self) -> Html {
         html! {
-                <>
-                    { for self.projects.iter().map(|p| self.render_item(p)) }
-                </>
+            <>
+            { for self.projects.iter().map(|p| self.render_item(p)) }
+            </>
         }
     }
 }

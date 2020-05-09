@@ -33,7 +33,7 @@ strum = "0.18"
 strum_macros = "0.18"
 
 [dependencies.yew]
-version = "0.14.1"
+version = "0.16.0"
 features = ["web_sys"]
 
 [dependencies.yew-router]

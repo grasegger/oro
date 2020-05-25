@@ -6,7 +6,7 @@
   "devDependencies": {
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-wasm.rs": "^1.2.15",
-    "pug": "^2.0.4",
+    "pug": "^3.0.0",
     "sass": "^1.26.3"
   },
   "scripts": {
